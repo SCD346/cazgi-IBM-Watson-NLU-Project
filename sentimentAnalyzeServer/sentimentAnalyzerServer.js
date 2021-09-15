@@ -73,10 +73,45 @@ app.get("/url/sentiment", (req,res) => {
     return res.send("url sentiment for "+req.query.url);
 });
 
+
+
 //The endpoint for the webserver ending with /text/emotion
 app.get("/text/emotion", (req,res) => {
-    return res.send({"happy":"10","sad":"90"});
+ const analyzeParams = {
+ "text": req.query.text,
+ "features": {
+ "entities": {
+ "emotion": true,
+ "sentiment": true,
+ "limit": 1
+ },
+ "keywords": {
+ "emotion": true,
+ "sentiment": true,
+ "limit": 1
+ }
+ }
+ }
+ 
+ const naturalLanguageUnderstanding = getNLUInstance();
+ 
+ naturalLanguageUnderstanding.analyze(analyzeParams)
+ .then(analysisResults => {
+ console.log(analysisResults);
+ //console.log(JSON.stringify(analysisResults.result.entities[0].emotion,null,2));
+return res.send(analysisResults.result.keywords[0].emotion,null,2);
+ //return res.send(analysisResults);
+ })
+ .catch(err => {
+ return res.send("Could not do desired operation "+err);
+ });
+ 
 });
+// app.get("/text/emotion", (req,res) => {
+//     return res.send({"happy":"10","sad":"90"});
+// });
+
+
 
 app.get("/text/sentiment", (req,res) => {
     return res.send("text sentiment for "+req.query.text);
