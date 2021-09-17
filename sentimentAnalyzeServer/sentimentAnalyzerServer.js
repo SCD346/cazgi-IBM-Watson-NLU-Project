@@ -31,6 +31,8 @@ app.get("/", (req, res) => {
     res.render('index.html');
 });
 
+// ENDPOINTS START
+//The endpoint for the webserver ending with /url/emotion
 app.get("/url/emotion", (req, res) => {
 
     const analyzeParams = {
@@ -53,7 +55,28 @@ app.get("/url/emotion", (req, res) => {
 
 });
 
+// //The endpoint for the webserver ending with /url/sentiment
+// app.get("/url/sentiment", (req, res) => {
+//     const analyzeParams = {
+//         url: req.query.url,
+//         features: {
+//             sentiment: {}
+//         }
+//     };
+//     let response = getNLUInstance().analyze(analyzeParams)
+//         .then(analysisResults => {
+//             let resultAnalysis = JSON.stringify(
+//             analysisResults.result.sentiment.document.label);
+//             return res.send(resultAnalysis)
+//         })
+//         .catch(err => {
+//             console.log('error:', err);
+//             return res.send(err);
+//         });
+// });
+
 //TEST
+//The endpoint for the webserver ending with /url/sentiment
 app.get("/url/sentiment", (req,res) => {
 const analyzeParams = {
  "url": req.query.url,
@@ -83,10 +106,9 @@ const analyzeParams = {
  });
  
 });
-
-
 //TEST
 
+//The endpoint for the webserver ending with /text/emotion
 app.get("/text/emotion", (req, res) => {
 
     const analyzeParams = {
@@ -109,6 +131,7 @@ app.get("/text/emotion", (req, res) => {
 
 });
 
+//The endpoint for the webserver ending with /text/sentiment
 app.get("/text/sentiment", (req, res) => {
 
     const analyzeParams = {
