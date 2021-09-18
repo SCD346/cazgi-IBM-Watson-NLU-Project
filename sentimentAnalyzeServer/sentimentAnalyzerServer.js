@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 });
 
 // ENDPOINTS START
-//The endpoint for the webserver ending with /url/emotion
+//ENDPOINT 1: For the webserver ending with /url/emotion
 app.get("/url/emotion", (req, res) => {
 
     const analyzeParams = {
@@ -55,39 +55,13 @@ app.get("/url/emotion", (req, res) => {
 
 });
 
-// //The endpoint for the webserver ending with /url/sentiment
-// app.get("/url/sentiment", (req, res) => {
-//     const analyzeParams = {
-//         url: req.query.url,
-//         features: {
-//             sentiment: {}
-//         }
-//     };
-//     let response = getNLUInstance().analyze(analyzeParams)
-//         .then(analysisResults => {
-//             let resultAnalysis = JSON.stringify(
-//             analysisResults.result.sentiment.document.label);
-//             return res.send(resultAnalysis)
-//         })
-//         .catch(err => {
-//             console.log('error:', err);
-//             return res.send(err);
-//         });
-// });
-
-//TEST
-//The endpoint for the webserver ending with /url/sentiment
+//ENDPOINT 2: For the webserver ending with /url/sentiment
 app.get("/url/sentiment", (req,res) => {
 const analyzeParams = {
  "url": req.query.url,
  "features": {
- "entities": {
- "emotion": true,
- "sentiment": true,
- "limit": 1
- },
+ 
  "keywords": {
- "emotion": true,
  "sentiment": true,
  "limit": 1
  }
@@ -99,16 +73,15 @@ const analyzeParams = {
  .then(analysisResults => {
  console.log(analysisResults);
  console.log(JSON.stringify(analysisResults.result.keywords[0].sentiment,null,2));
- return res.send(analysisResults.result.keywords[0].sentiment.label,null,2);
+ return res.send(analysisResults.result.keywords[0].sentiment,null,2);
  })
  .catch(err => {
  return res.send("Could not do desired operation "+err);
  });
  
 });
-//TEST
 
-//The endpoint for the webserver ending with /text/emotion
+//ENDPOINT 3: For the webserver ending with /text/emotion
 app.get("/text/emotion", (req, res) => {
 
     const analyzeParams = {
@@ -131,20 +104,24 @@ app.get("/text/emotion", (req, res) => {
 
 });
 
-//The endpoint for the webserver ending with /text/sentiment
+//ENDPOINT 4: For the webserver ending with /text/sentiment
 app.get("/text/sentiment", (req, res) => {
 
-    const analyzeParams = {
-        text: req.query.text,
-        features: {
-            sentiment: {}
+    const analyzeParams = 
+        {
+            "text": req.query.text,
+            "features": {
+                "keywords": {
+                                "sentiment": true,
+                                // "limit": 1
+                            }
+            }
         }
-    };
+
+    const naturalLanguageUnderstanding = getNLUInstance();
     let response = getNLUInstance().analyze(analyzeParams)
         .then(analysisResults => {
-            let resultAnalysis = JSON.stringify(
-            analysisResults.result.sentiment.document.label);
-            return res.send(resultAnalysis);
+            return res.send(analysisResults.result.keywords[0].sentiment,null,2);
 
         })
         .catch(err => {
@@ -152,7 +129,9 @@ app.get("/text/sentiment", (req, res) => {
             return res.send(err);
         });
 });
+// ENDPOINTS END
 
+// SERVER
 let server = app.listen(8080, () => {
     console.log('Listening', server.address().port)
 });
